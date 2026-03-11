@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Briefing Report - {{ company_name }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #f9fafb;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 3rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .report-header {
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .report-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .report-meta {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.95rem;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meta-label {
+            font-weight: 600;
+            color: #4b5563;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .meta-value {
+            font-size: 1rem;
+            color: #1f2937;
+            margin-top: 0.25rem;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1f2937;
+            border-left: 4px solid #3b82f6;
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .summary-box {
+            background: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            padding: 1.5rem;
+            line-height: 1.8;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .recommendation-box {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 1.5rem;
+            line-height: 1.8;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .metric-card {
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .metric-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+
+        .risk-item {
+            background: #fef2f2;
+            border-left: 3px solid #ef4444;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            border-radius: 0 4px 4px 0;
+            line-height: 1.7;
+        }
+
+        .key-point-item {
+            background: #fef9c3;
+            border-left: 3px solid #eab308;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            border-radius: 0 4px 4px 0;
+            line-height: 1.7;
+        }
+
+        footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.85rem;
+            color: #9ca3af;
+            text-align: right;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .report-title {
+                font-size: 1.5rem;
+            }
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="report-header">
+            <h1 class="report-title">{{ company_name }} - Briefing Report</h1>
+            <div class="report-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Ticker</span>
+                    <span class="meta-value">{{ ticker }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Sector</span>
+                    <span class="meta-value">{{ sector }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Analyst</span>
+                    <span class="meta-value">{{ analyst_name }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Generated</span>
+                    <span class="meta-value">{{ generated_at }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Executive Summary</h2>
+            <div class="summary-box">
+                {{ summary }}
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Key Points</h2>
+            <div>
+                {% if key_points %}
+                    {% for point in key_points %}
+                        <div class="key-point-item">{{ point }}</div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color: #9ca3af;">No key points available.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Risks</h2>
+            <div>
+                {% if risks %}
+                    {% for risk in risks %}
+                        <div class="risk-item">{{ risk }}</div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color: #9ca3af;">No risks identified.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Recommendation</h2>
+            <div class="recommendation-box">
+                {{ recommendation }}
+            </div>
+        </div>
+
+        {% if metrics %}
+            <div class="section">
+                <h2 class="section-title">Key Metrics</h2>
+                <div class="metrics-grid">
+                    {% for name, value in metrics.items() %}
+                        <div class="metric-card">
+                            <div class="metric-name">{{ name }}</div>
+                            <div class="metric-value">{{ value }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <footer>
+            <p>Report ID: {{ id }} | Generated: {{ generated_at }}</p>
+        </footer>
+    </div>
+</body>
+</html>

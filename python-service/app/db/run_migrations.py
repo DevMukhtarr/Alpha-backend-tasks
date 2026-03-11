@@ -25,7 +25,6 @@ def _to_psycopg_conninfo(database_url: str) -> str:
         )
     return database_url
 
-
 def _ensure_schema_migrations(conn: psycopg.Connection) -> None:
     with conn.cursor() as cur:
         cur.execute(
