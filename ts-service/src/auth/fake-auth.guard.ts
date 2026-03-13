@@ -4,13 +4,21 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
+import { Repository } from 'typeorm';
 
+import { Recruiter } from '../entities/recruiter.entity';
 import { AuthUser } from './auth.types';
 
 @Injectable()
 export class FakeAuthGuard implements CanActivate {
-  canActivate(context: ExecutionContext): boolean {
+  constructor(
+    @InjectRepository(Recruiter)
+    private recruiterRepository: Repository<Recruiter>,
+  ) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
 
     const userIdHeader = request.header('x-user-id');
@@ -19,6 +27,16 @@ export class FakeAuthGuard implements CanActivate {
     if (!userIdHeader || !workspaceIdHeader) {
       throw new UnauthorizedException(
         'Missing required headers: x-user-id and x-workspace-id',
+      );
+    }
+
+    const recruiter = await this.recruiterRepository.findOne({
+      where: { id: userIdHeader, workspaceId: workspaceIdHeader },
+    });
+
+    if (!recruiter) {
+      throw new UnauthorizedException(
+        'User not assigned to this workspace',
       );
     }
 
